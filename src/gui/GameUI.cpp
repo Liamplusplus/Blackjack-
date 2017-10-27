@@ -15,12 +15,14 @@ namespace gui {
 
         win->addTip("1-6: Bet on box");
 
-        bet = new TextEntry(win, win->getMiddle().x - 8, 55);
+        bet = new TextEntry(win);
+		bet->setPosition(0.5f, 0.90f);
         bet->setSubject("Place Bet");
 
         for (size_t i = 0; i < boxes.size(); ++i)
         {
-            boxes[i] = new Label(win, box_width * (i + 1), 50);
+            boxes[i] = new Label(win);
+			boxes[i]->setPosition(0.1666f * (i + 0.5), 0.8f);
             boxes[i]->addCommand(i + 49, std::bind(&GameUI::placeBet, this, i + 1));
         }
 
@@ -44,6 +46,7 @@ namespace gui {
         for (int i = 0; i < boxes.size(); ++i)
         {
             boxes[i]->setText("Box " + std::to_string(i + 1));
+            boxes[i]->appendLine("");
             for (auto& bet : game.boxes[i].bets)
                 if (bet > 0.0f)
                     boxes[i]->appendLine(std::to_string(bet));
