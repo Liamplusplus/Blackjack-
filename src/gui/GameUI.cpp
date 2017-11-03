@@ -1,5 +1,5 @@
 #include <gui/GameUI.hpp>
-
+#include <sstream>
 namespace gui {
 
     GameUI::GameUI(Game& game) : game(game)
@@ -35,9 +35,16 @@ namespace gui {
     void GameUI::placeBet(int boxn)
     {
         bet->getInput();
-        std::string bet_amount = bet->getText();
-        if (!bet_amount.empty())
-            game.addBet(std::stod(bet->getText()), boxn);
+        std::stringstream bet_amount;
+        bet_amount.str(bet->getText());
+        if (!bet_amount.str().empty())
+        {
+            double temp = 0.0f;
+            if (bet_amount >> temp)
+                game.addBet(temp, boxn);
+            else
+                bet->setText("Invalid bet");
+        }
         RefreshBoxes();
     }
 

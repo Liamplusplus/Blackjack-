@@ -8,8 +8,8 @@ int main()
 
 
     Game game;
-    gui::GameUI* interface = new gui::GameUI(game);
-	interface->Bind(mainwindow);
+    gui::GameUI interface(game);
+	interface.Bind(mainwindow);
 
 	gui.Run(); 
 }

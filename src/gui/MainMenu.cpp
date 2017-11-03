@@ -4,7 +4,7 @@
 namespace blackjack {
 
 
-	MainMenu::MainMenu(Game& game)
+	MainMenu::MainMenu(Game& game) : sp(game)
 	{
 	
 	}
@@ -14,7 +14,8 @@ namespace blackjack {
 		mode_select = new Menu(target);
 		mode_select->setPosition(0.5f, 0.5f);
 
-		mode_select->addItem("Play");
+		mode_select->addItem("Singleplayer");
+		mode_select->addItem("Multiplayer");
 		mode_select->addItem("Settings");
 
 		target->addCommand(10, std::bind(&MainMenu::Select, this));
@@ -27,11 +28,12 @@ namespace blackjack {
 	{
 		switch (mode_select->getSelectedIndex())
 		{
-			case Selection::GAME:
-				//playerScreen();
+			case Selection::SP:
+                //SingleplayerScreen scr(game);
+				//SingleplayerScreen();
 				break;
 			case Selection::SETTINGS:
-				Config::Display(win);
+				//Config::Display(win);
 				break;
 		}
 	}

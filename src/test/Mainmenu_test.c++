@@ -8,8 +8,8 @@ int main()
 
 
     Game game;
-    blackjack::MainMenu* interface = new blackjack::MainMenu(game);
-	interface->Bind(mainwindow);
+    blackjack::MainMenu main_menu(game);
+	main_menu.Bind(mainwindow);
 
 	gui.Run(); 
 }

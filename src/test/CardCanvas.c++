@@ -9,7 +9,7 @@ int main()
     UCurses gui;
 	Window* mainwindow = gui.createWindow();
 
-    Card test(5, Card::Suit::HEART);
+    Card test(13, Card::Suit::DIAMOND);
     gui::CardCanvas* canvas = new gui::CardCanvas(mainwindow, 5, 3);
     canvas->Load(test);
 

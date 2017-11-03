@@ -8,7 +8,7 @@ using namespace ucurses;
 
 namespace gui {
 
-    class GameUI : public Interface
+    class GameUI : public ucurses::Interface
     {
 
         public:
