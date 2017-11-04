@@ -1,6 +1,6 @@
 #include <class/Player.hpp>
 
-Player::Player() : balance(100.0f)
+Player::Player() : balance(100.0f), name("Anonymous Player")
 {
     
 }

@@ -32,3 +32,8 @@ bool Box::addBet(float value)
     }
     return false;
 }
+
+void Box::addCard(Card& card)
+{
+
+}

@@ -1,5 +1,5 @@
 #pragma once
-
+#include <string>
 
 class Player
 {
@@ -8,7 +8,6 @@ class Player
 
         Player();
     
-    protected:
-
         float balance;
+		std::string name;
 };

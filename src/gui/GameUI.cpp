@@ -13,6 +13,10 @@ namespace gui {
         coord x = win->getSize().x - 40;
         coord box_width = x / 6;
 
+		player_info = new Label(win);
+		player_info->setPosition(0.05f, 0.1f);
+		player_info->setText(game.player.name + ": " + std::to_string(game.player.balance));
+
         win->addTip("1-6: Bet on box");
 
         bet = new TextEntry(win);
@@ -32,6 +36,12 @@ namespace gui {
         RefreshBoxes();
     }
 
+	void GameUI::Deal()
+	{
+		Card next_card = game.Deal();	
+		// Draw card in the right position
+	}
+
     void GameUI::placeBet(int boxn)
     {
         bet->getInput();
@@ -41,10 +51,21 @@ namespace gui {
         {
             double temp = 0.0f;
             if (bet_amount >> temp)
-                game.addBet(temp, boxn);
+			{
+				switch (game.addBet(temp, boxn))
+				{
+					case BetErrorCode::INSUFFICIENT_FUNDS:
+                		bet->setText("Not enough funds");
+						break;
+					case BetErrorCode::INVALID:
+                		bet->setText("Invalid bet");
+						break;
+				}
+			}
             else
                 bet->setText("Invalid bet");
         }
+		player_info->setText(game.player.name + ": " + std::to_string(game.player.balance));
         RefreshBoxes();
     }
 

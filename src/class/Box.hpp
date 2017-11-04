@@ -9,6 +9,7 @@ class Box
 {
     public:
 
+
         Box();
 
 
@@ -20,7 +21,8 @@ class Box
         // Two aces cannot be 11
 
         // Returns false if box is full
-        bool addBet(float f);
+        ErrorCode addBet(float f);
+		void addCard(Card& card);
         std::array<float, 4> bets;
 
     protected:

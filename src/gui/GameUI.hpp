@@ -20,14 +20,17 @@ namespace gui {
 
         protected:
 
+			// Widgets
             std::array<Label*, 6> boxes;
-
             TextEntry* bet;
+			Label* player_info;
 
             Game& game;
 
             void placeBet(int boxn);
             void RefreshBoxes();
+
+			void Deal();
     
     };
 
