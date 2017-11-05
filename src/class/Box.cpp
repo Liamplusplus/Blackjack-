@@ -1,4 +1,5 @@
 #include <class/Box.hpp>
+#include <fstream>
 
 Box::Box()
 {
@@ -12,6 +13,13 @@ float Box::getSum()
     for (auto& bet : bets)
         temp += bet;
     return temp;
+}
+		
+Card Box::Top()
+{ 
+	for (auto& card : cards)
+		if (card.Null())
+			return card; 
 }
 
 std::pair<short, short> Box::getCount()
@@ -35,5 +43,12 @@ bool Box::addBet(float value)
 
 void Box::addCard(Card& card)
 {
-
+	std::ofstream file("./log/box");
+	file << "addCard() " << card.value;
+	for (auto& it : cards)
+	{
+		if (it.Null())
+			it = card;
+		break;
+	}
 }

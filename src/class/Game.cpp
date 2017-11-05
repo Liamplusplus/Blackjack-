@@ -21,22 +21,23 @@ void Game::Run()
 
 }
 
-Card Game::Deal()
+void Game::Deal()
 {
    
     for (auto& box : boxes)
     {
         if (box.getSum() > 0.0f)
         {
-			Card copy = deck.back();
-			box.addCard(deck.back());
-			used.push_back(deck.back());
-			deck.pop_back();
+			Card top = deck.Top();
+			top.write_form(game::file_log);
+			box.addCard(top);
+			used.push_back(top);
+			deck.Pop();
         }
     }
 }
 
-BetErrorCode Game::addBet(float value, int box)
+Game::BetErrorCode Game::addBet(float value, int box)
 {
 	if (player.balance > value)
 	{

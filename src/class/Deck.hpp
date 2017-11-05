@@ -24,6 +24,9 @@ class Deck
         void write_binary(std::ostream& stream) {}
         void read_binary(std::istream& stream)  {}
 
+		Card& Top() { return deck.back(); }
+		void Pop() { deck.pop_back(); }
+
     protected:
 
         // Last element of the array is the top of the deck

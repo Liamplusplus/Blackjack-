@@ -21,9 +21,12 @@ class Box
         // Two aces cannot be 11
 
         // Returns false if box is full
-        ErrorCode addBet(float f);
+        bool addBet(float f);
 		void addCard(Card& card);
         std::array<float, 4> bets;
+
+		Card Top();
+		bool Empty() 	{ return cards[0].Null(); }
 
     protected:
 

@@ -16,6 +16,8 @@ namespace gui {
         file.seekg((card.value - 1) * 108);
 
         file.read(data.data(), 108);
+        std::ofstream ofile("log/card_canvas", std::ios_base::out);
+		card.write_form(ofile);
         LoadSuit(card);
     }
     

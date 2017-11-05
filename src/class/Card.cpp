@@ -1,12 +1,7 @@
 #include <class/Card.hpp>
 
 
-Card::Card(const Card& src)
-{
-    value = src.value;
-    suit = src.suit;
-}
-void Card::write_form(std::ostream& stream)
+void Card::write_form(std::ostream& stream) const
 {
     stream << "<Value> " << value << '\n' << "<Suit> " << suit_names[static_cast<int>(suit)] << std::endl;
 }
@@ -21,7 +16,7 @@ void Card::read_form(std::istream& stream)
     suit = static_cast<Suit>(cast);
 }
 
-void Card::write_dump(std::ostream& stream)
+void Card::write_dump(std::ostream& stream) const
 {
     stream << value << " " << static_cast<int>(suit);
 }

@@ -18,7 +18,7 @@ class Game
 		enum BetErrorCode { SUCCESS = 0, INSUFFICIENT_FUNDS, MAX_CAPACITY, INVALID };
         Game();
 
-        Card Deal();
+        void Deal();
         void Run();
 
         BetErrorCode addBet(float value, int box);
@@ -28,10 +28,6 @@ class Game
 
         std::array<Box, 6> boxes;
 
-		// State
-		
-		Card last_card;
-		int current_box;
 
 		Player player;
 

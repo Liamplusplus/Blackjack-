@@ -1,5 +1,7 @@
 #include <gui/GameUI.hpp>
 #include <sstream>
+#include <gui/CardCanvas.hpp>
+
 namespace gui {
 
     GameUI::GameUI(Game& game) : game(game)
@@ -9,6 +11,7 @@ namespace gui {
 
     void GameUI::Bind(Window* win)
     {
+		target = win;
         // Split window up into 6. With 40 characters of spacing
         coord x = win->getSize().x - 40;
         coord box_width = x / 6;
@@ -30,6 +33,9 @@ namespace gui {
             boxes[i]->addCommand(i + 49, std::bind(&GameUI::placeBet, this, i + 1));
         }
 
+        win->addTip("Enter: Deal");
+		win->addCommand(10, std::bind(&GameUI::Deal, this));
+
         for (int i = 0; i < boxes.size(); ++i)
             boxes[i]->setText("Box " + std::to_string(i + 1));
 
@@ -38,7 +44,26 @@ namespace gui {
 
 	void GameUI::Deal()
 	{
-		Card next_card = game.Deal();	
+		// PSEUDO
+		// Deal cards
+		// Add Canvas for each box with a new card
+		game.Deal();	
+		
+		for (int i = 0; i < game.boxes.size(); ++i)
+		{
+			Box& box = game.boxes[i];
+			if (!box.Empty())
+			{
+				std::ofstream file("./box.log", std::ios_base::out);
+				file << "Adding canvas for box " << i;
+				float x = 0.1666f * (i + 0.5);
+				float y = 0.75f;
+				CardCanvas* canvas = new CardCanvas(target);
+				canvas->setPosition(x, y);
+				canvas->Load(box.Top());
+			}
+		}
+	
 		// Draw card in the right position
 	}
 
@@ -54,10 +79,10 @@ namespace gui {
 			{
 				switch (game.addBet(temp, boxn))
 				{
-					case BetErrorCode::INSUFFICIENT_FUNDS:
+					case Game::BetErrorCode::INSUFFICIENT_FUNDS:
                 		bet->setText("Not enough funds");
 						break;
-					case BetErrorCode::INVALID:
+					case Game::BetErrorCode::INVALID:
                 		bet->setText("Invalid bet");
 						break;
 				}
@@ -80,4 +105,9 @@ namespace gui {
                     boxes[i]->appendLine(std::to_string(bet));
         }
     }
+
+	void GameUI::RefreshGraphics()
+	{
+	
+	}
 }

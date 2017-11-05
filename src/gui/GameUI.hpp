@@ -17,6 +17,9 @@ namespace gui {
 
             virtual void Bind(Window* win);
 
+			void Run();
+			void Deal();
+
 
         protected:
 
@@ -28,9 +31,10 @@ namespace gui {
             Game& game;
 
             void placeBet(int boxn);
-            void RefreshBoxes();
 
-			void Deal();
+
+			void RefreshGraphics();
+            void RefreshBoxes();
     
     };
 
