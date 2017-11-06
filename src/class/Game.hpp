@@ -20,6 +20,12 @@ class Game
 
         void Deal();
         void Run();
+        /*
+         * Each player places bets
+         * Deals first card to players and dealer. Deals second card to all players.
+         * Playing phase for all players
+         * Dealing phase
+         */
 
         BetErrorCode addBet(float value, int box);
         
@@ -28,8 +34,13 @@ class Game
 
         std::array<Box, 6> boxes;
 
+        std::array<Player, 4> players;
+        Player& currentPlayer();
 
-		Player player;
-
+        int current_player;
+        /*
+         * Everytime a player finishes betting phase
+         * or finshes box this is incremented]
+         */
 
 };

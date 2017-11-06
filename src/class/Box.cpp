@@ -18,7 +18,7 @@ float Box::getSum()
 Card Box::Top()
 { 
 	for (auto& card : cards)
-		if (card.Null())
+		if (!card.Null())
 			return card; 
 }
 

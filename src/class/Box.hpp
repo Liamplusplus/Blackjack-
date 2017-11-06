@@ -32,3 +32,4 @@ class Box
 
         std::array<Card, 5> cards;
 };
+

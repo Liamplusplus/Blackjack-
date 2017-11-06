@@ -1,6 +1,8 @@
 #include <gui/GameUI.hpp>
-#include <sstream>
 #include <gui/CardCanvas.hpp>
+
+#include <sstream>
+#include <iomanip>
 
 namespace gui {
 
@@ -18,7 +20,9 @@ namespace gui {
 
 		player_info = new Label(win);
 		player_info->setPosition(0.05f, 0.1f);
-		player_info->setText(game.player.name + ": " + std::to_string(game.player.balance));
+        std::stringstream stream;
+        stream << game.players[0].name << ": $" << std::fixed << std::setprecision(2) << game.players[0].balance;
+		player_info->setText(stream.str());
 
         win->addTip("1-6: Bet on box");
 
@@ -29,7 +33,7 @@ namespace gui {
         for (size_t i = 0; i < boxes.size(); ++i)
         {
             boxes[i] = new Label(win);
-			boxes[i]->setPosition(0.1666f * (i + 0.5), 0.8f);
+			boxes[i]->setPosition(0.1666f * (i + 0.3), 0.8f);
             boxes[i]->addCommand(i + 49, std::bind(&GameUI::placeBet, this, i + 1));
         }
 
@@ -56,11 +60,12 @@ namespace gui {
 			{
 				std::ofstream file("./box.log", std::ios_base::out);
 				file << "Adding canvas for box " << i;
-				float x = 0.1666f * (i + 0.5);
-				float y = 0.75f;
+				float x = 0.1666f * (i + 0.3);
+				float y = 0.65;
 				CardCanvas* canvas = new CardCanvas(target);
 				canvas->setPosition(x, y);
 				canvas->Load(box.Top());
+                box.Top().write_form(file);
 			}
 		}
 	
@@ -90,7 +95,9 @@ namespace gui {
             else
                 bet->setText("Invalid bet");
         }
-		player_info->setText(game.player.name + ": " + std::to_string(game.player.balance));
+        std::stringstream stream("$");
+        stream << game.players[0].name << ": $" << std::fixed << std::setprecision(2) <<  game.players[0].balance;
+		player_info->setText(stream.str());
         RefreshBoxes();
     }
 
@@ -102,7 +109,11 @@ namespace gui {
             boxes[i]->appendLine("");
             for (auto& bet : game.boxes[i].bets)
                 if (bet > 0.0f)
-                    boxes[i]->appendLine(std::to_string(bet));
+                {
+                    std::stringstream stream;
+                    stream << game.players[0].name << ": $" << std::fixed << std::setprecision(2) << bet;
+                    boxes[i]->appendLine(stream.str());
+                }
         }
     }
 

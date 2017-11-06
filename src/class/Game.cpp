@@ -8,6 +8,8 @@ Game::Game()
 	used.reserve(32);
     for (auto& box : boxes)
         box = Box();
+
+    deck.Shuffle();
 }
 
 void Game::Run()
@@ -29,7 +31,6 @@ void Game::Deal()
         if (box.getSum() > 0.0f)
         {
 			Card top = deck.Top();
-			top.write_form(game::file_log);
 			box.addCard(top);
 			used.push_back(top);
 			deck.Pop();
@@ -39,9 +40,9 @@ void Game::Deal()
 
 Game::BetErrorCode Game::addBet(float value, int box)
 {
-	if (player.balance > value)
+	if (players[0].balance > value)
 	{
-		player.balance -= value;
+		players[0].balance -= value;
     	if (boxes[box - 1].addBet(value))
 			return BetErrorCode::SUCCESS;
 		else
