@@ -6,36 +6,44 @@
 #include <ucurses/ucurses.hpp>
 using namespace ucurses;
 
-namespace gui {
+namespace blackjack {
 
     class GameUI : public Interface
     {
 
         public:
 
-            GameUI(Game& game);
+            GameUI(Game* game);
 
-            virtual void Bind(Window* win);
-
-			void Run();
-			void Deal();
-
+			// Game states
+			void Hit();
+			void Sit();
+			void FinalDeal();
+			void setup();
+			void GamePhase();
+			void InitialDeal();
 
         protected:
 
+            void Initialize();
+
 			// Widgets
             std::array<Label*, 6> boxes;
+            std::array<Label*, 6> counts;
             TextEntry* bet;
 			Label* player_info;
 
-            Game& game;
+            Game* game;
 
             void placeBet(int boxn);
 
 
 			void RefreshGraphics();
             void RefreshBoxes();
-    
+            void refreshBoxCount(int index);
+
+			// Everytime box changes update UI to display active box
+			void RefreshActiveBox();
     };
 
 }

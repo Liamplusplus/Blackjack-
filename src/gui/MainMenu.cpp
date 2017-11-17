@@ -9,8 +9,9 @@ namespace blackjack {
 	
 	}
 
-	void MainMenu::Bind(Window* target)
+	void MainMenu::Initialize()
 	{
+		target->Clear();
 		mode_select = new Menu(target);
 		mode_select->setPosition(0.5f, 0.5f);
 
@@ -26,14 +27,15 @@ namespace blackjack {
 
 	void MainMenu::Select()
 	{
+		target->pushCallback(KEY_F(3), std::bind(&MainMenu::Initialize, this));
+
 		switch (mode_select->getSelectedIndex())
 		{
 			case Selection::SP:
-                //SingleplayerScreen scr(game);
-				//SingleplayerScreen();
+				sp.Bind(target);
 				break;
 			case Selection::SETTINGS:
-				//Config::Display(win);
+				config_ui.Bind(target);
 				break;
 		}
 	}

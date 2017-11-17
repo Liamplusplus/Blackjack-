@@ -19,7 +19,7 @@ comma :=,
 
 #*****************  User Config ********************************************
 
-MAIN := Blackjack_Plus
+MAIN := Blackjack++
 
 LIBRARIES := ctk ucurses boost
 LIBFILES := $(DYNAMIC) -lucurses -lctk -lboost_system -lboost_filesystem -Wl,--as-needed

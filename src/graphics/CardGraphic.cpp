@@ -1,4 +1,3 @@
-#pragma once
 #include <graphics/CardGraphic.hpp>
 #include <class/Config.hpp>
 #include <fstream>

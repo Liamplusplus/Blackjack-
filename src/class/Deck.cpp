@@ -4,11 +4,15 @@
 #include <algorithm>
 #include <fstream>
 
+#include <ctk/random/RandomGenerator.hpp>
+
 Deck::Deck()
 {
+	// Fill the deck with 52 unique cards
     for (int value = 1; value <= 13; ++value)
         for (int suit = 0; suit < Card::Suit::NUMSUIT; ++suit)
             deck.emplace_back(value, static_cast<Card::Suit>(suit));
+
     if (deck.size() != 52)
     {
         std::fstream logfile(game::log, std::ios_base::out);
@@ -16,9 +20,9 @@ Deck::Deck()
     }
 }
 
-void Deck::Shuffle()
+void Deck::Shuffle(ctk::RandomGenerator& rand_gen)
 {
-    std::random_shuffle ( deck.begin(), deck.end() );
+    std::shuffle ( deck.begin(), deck.end(), rand_gen.Generate() );
 }
 
 void Deck::write_form(std::ostream& stream)

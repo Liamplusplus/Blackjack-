@@ -8,17 +8,36 @@
 #include <array>
 
 #include <class/Deck.hpp>
-#include <class/Box.hpp>
+#include <class/BoxManager.hpp>
 #include <class/Player.hpp>
+
+#include <ctk/random/RandomGenerator.hpp>
 
 class Game
 {
     public:
 
-		enum BetErrorCode { SUCCESS = 0, INSUFFICIENT_FUNDS, MAX_CAPACITY, INVALID };
+		enum class State 			{ PLACE_BETS = 0, INITIAL_DEAL, PLAY, DEAL, PAY}; 
+		enum class InitialState		{ FIRST_ROUND = 0, DEALER, SECOND_ROUND };
+		enum class FinalState		{ DEAL, PAYOUT };
         Game();
 
-        void Deal();
+		/* Game Flow */
+
+        int InitialDeal();
+		InitialState initial_state;
+		int GamePhase();
+		Card FinalDeal();
+		void Payout();
+
+		void Quit();
+		void Save();
+		void Next();
+
+		// Empties all boxes and resets statuses
+		// Called on quit and at the end of each hand
+		void CleanUp();
+
         void Run();
         /*
          * Each player places bets
@@ -27,20 +46,33 @@ class Game
          * Dealing phase
          */
 
-        BetErrorCode addBet(float value, int box);
-        
+		int Hit();
+		void Sit();
+
+		/* Components */
+
         Deck deck;
 		std::vector<Card> used;
 
-        std::array<Box, 6> boxes;
+		BoxManager box_manager;
 
-        std::array<Player, 4> players;
-        Player& currentPlayer();
+		/* Players */
 
-        int current_player;
-        /*
-         * Everytime a player finishes betting phase
-         * or finshes box this is incremented]
-         */
+		Player& currentPlayer();
 
+		void Load(const std::string& path);
+
+		void logState();
+
+	protected:
+
+		std::array<Player, 4> players;
+
+		State state;
+
+		int current_player;
+
+		ctk::RandomGenerator rand_gen;
+
+		bool active;
 };

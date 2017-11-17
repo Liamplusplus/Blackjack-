@@ -1,0 +1,64 @@
+<Gamestate>
+<CurrentPlayer> 0
+<CurrentBox> 4
+
+<Boxes>
+
+<Active> true<Busted> false
+<Bets> 10 0 0 0 
+<Cards> 2
+<Value> 13
+<Suit> Diamonds
+
+<Value> 13
+<Suit> Spades
+
+<Value> 0
+<Suit> Hearts
+
+<Value> 0
+<Suit> Hearts
+
+<Value> 0
+<Suit> Hearts
+
+<Count> 20, -1
+
+<Active> false<Busted> false
+<Active> false<Busted> false
+<Active> true<Busted> false
+<Bets> 40 0 0 0 
+<Cards> 2
+<Value> 9
+<Suit> Diamonds
+
+<Value> 6
+<Suit> Diamonds
+
+<Value> 0
+<Suit> Hearts
+
+<Value> 0
+<Suit> Hearts
+
+<Value> 0
+<Suit> Hearts
+
+<Count> 15, -1
+
+<Active> false<Busted> false
+<Active> false<Busted> false
+<Dealer>
+<Active> false<Busted> false
+
+
+<Players>
+
+<Name> Liam
+<Balance> 450
+<Name> Null
+<Balance> 100
+<Name> Null
+<Balance> 100
+<Name> Null
+<Balance> 100

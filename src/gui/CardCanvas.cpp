@@ -1,7 +1,7 @@
 #include <gui/CardCanvas.hpp>
 #include <class/Config.hpp>
 
-namespace gui {
+namespace blackjack {
 
             
     CardCanvas::CardCanvas(Window* target, coord x, coord y) : Component(target, x, y)

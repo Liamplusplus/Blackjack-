@@ -5,7 +5,7 @@
 
 using namespace ucurses;
 
-namespace gui {
+namespace blackjack {
 
     // Very specific I know. Time constraints
     class CardCanvas : public Component

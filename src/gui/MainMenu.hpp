@@ -17,14 +17,15 @@ namespace blackjack {
 		public:
 
 			MainMenu(Game& game);
-			void Bind(Window* target);
 
 		protected:
 
 			void Select();
+			virtual void Initialize();
 
 			Menu* mode_select;
             SingleplayerScreen sp;
+			Config config_ui;
 	};
 
 }

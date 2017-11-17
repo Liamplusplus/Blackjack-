@@ -13,12 +13,17 @@ struct Card
     Suit suit;
 
     Card(int value, Suit suit) : value(value), suit(suit) {}
-    Card() : value(0) {}
+    Card() : value(0), suit(Suit::HEART) {}
+
+	Card(const Card& src)
+	{
+		value = src.value;
+		suit = src.suit;
+	}
 
 	bool Null() { return value == 0; }
 
-
-    // Methods
+    // I/O
     void write_form(std::ostream& stream) const;
     void read_form(std::istream& stream);
     
