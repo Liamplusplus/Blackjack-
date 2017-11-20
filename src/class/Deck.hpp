@@ -30,6 +30,7 @@ class Deck
 
 		Card& Top() { return deck.back(); }
 		void  Pop() { deck.pop_back(); }
+        void  Reset(ctk::RandomGenerator& rand_gen);
 
     protected:
 

@@ -1,3 +1,4 @@
+
 #pragma once
 #include <string>
 #include <fstream>
@@ -9,4 +10,8 @@ namespace game {
 	const static std::string save = "./.resources/save/";
 
 	extern std::ofstream debug;
+    
+    void write_binary(std::ostream& stream, const std::string& str);
+    void read_binary(std::istream& stream, std::string& str);
+
 }

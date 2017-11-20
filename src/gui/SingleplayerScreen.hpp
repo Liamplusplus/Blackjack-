@@ -7,16 +7,15 @@
 #include <ucurses/ucurses.hpp>
 using namespace ucurses;
 
-#include <class/Game.hpp>
-#include <gui/GameUI.hpp>
+class Game;
 
 namespace blackjack {
 
-    class SingleplayerScreen : public Interface
+    class SingleplayerScreen : public ucurses::State
     {
         public:
 
-            SingleplayerScreen(Game& game);
+            SingleplayerScreen(::Game* game);
 
             void New();
             void Load();
@@ -27,8 +26,7 @@ namespace blackjack {
 
             Menu* menu;
             coord2d pos = coord2d(0,0);
-			Game& game;
-			GameUI gui;
+			Game* game_data;
     
     };
 }

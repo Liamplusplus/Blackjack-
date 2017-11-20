@@ -1,9 +1,10 @@
 #include <gui/PlayerCreate.hpp>
+#include <class/Game.hpp>
 
 namespace blackjack {
 
 
-	PlayerCreate::PlayerCreate(Game& game) : game(game)
+	PlayerCreate::PlayerCreate(Game* game) : game_data(game)
 	{
 	
 	}

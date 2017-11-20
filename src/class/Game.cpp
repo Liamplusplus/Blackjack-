@@ -4,146 +4,128 @@
 #include <fstream>
 #include <algorithm>
 
-Game::Game() : current_player(0), current_box(0), active(false)
+Game::Game() : active(false)
 {
 	initial_state = InitialState::FIRST_ROUND;
-	used.reserve(32);
-    for (auto& box : boxes)
-        box = Box();
 
     deck.Shuffle(rand_gen);
 }
 
-void Game::Run()
+void Game::Save()
 {
-    /* 
-     * Choose bet (Enter amount (or quit))
-     * Play hand  (Hit or sit)
-     * Deal dealers hand
-     * Repeat
-     */
-
+    std::fstream file(game::save + player.getName(), std::ios_base::binary);
+    player.write_binary(file);
 }
-
-/* Deals to all boxes, does not allow player to interupt
-void Game::Deal()
-{
-    for (auto& box : boxes)
-    {
-        if (box.getSum() > 0.0f)
-        {
-			Card top = deck.Top();
-			box.addCard(top);
-			used.push_back(top);
-			deck.Pop();
-        }
-    }
-}
-*/
 
 // Interuptable initial deal phase
-// Find active box from 0 - 5
+// Add card to next active box
+// if no active boxes prompt player
 // If none return error
-// if current_box == 5
+// if current_box == 5 && round == first
+// deal dealer then set round to second
+// else start game phase
+//
 int Game::InitialDeal()
 {
-	int active_box = nextActiveBox();
-	nextBox();
+	int active_box = box_manager.nextActive();
+    Box& box = box_manager.getActive();
+    if (active_box != -1)
+    {
+        active = true;
+        box_manager.addCard(deck.Top());
+        deck.Pop();
 
-	if (active_box != -1)
-	{
-		active = true;
-		Card top = deck.Top();
-		boxes[active_box].addCard(top);
-		used.push_back(top);
-		deck.Pop();
-		return active_box;
-	}
-	else
-	{
-		if (!active)
-		{
-			current_box = 0;
-			return -1; // No bets have been placed
-		}
-		else if (initial_state == InitialState::FIRST_ROUND)
-		{
-			Card top = deck.Top();
-			dealer.addCard(top);
-			used.push_back(top);
-			deck.Pop();
-			initial_state = InitialState::SECOND_ROUND;
-			return -2;
-		}
-		else
-			return -3;
-	}
-	if (nextActiveBox() == -1 && initial_state == InitialState::SECOND_ROUND)
-		return -3;
+        if (box.getStatus() == Box::Status::BLACKJACK)
+            Pay(active_box, 2.5f);
+
+        return active_box;
+    }
+    else if (!active)
+    {
+        box_manager.setActive(0);
+        return -1; // No bets have been placed
+    }
+    else if (initial_state == InitialState::FIRST_ROUND)
+    {
+        box_manager.Get(DEALER_BOX).addCard(deck.Top());
+        deck.Pop();
+        initial_state = InitialState::SECOND_ROUND;
+
+        // Deal second card to each active box
+        box_manager.setActive(0);
+        return -2;
+    }
+    else
+        return -3;
+
+    if (box_manager.nextActive() == -1 && initial_state == InitialState::SECOND_ROUND)
+        return -3;
 }
 
 
 
 void Game::logState()
 {
-	std::ofstream stream("./log/game_state", std::ios_base::out);
-	stream << "<Gamestate>\n";
+    std::ofstream stream("./log/game_state", std::ios_base::out);
+    stream << "<Gamestate>\n";
 
-	stream << "<CurrentPlayer> " << current_player;
-	stream << "\n<CurrentBox> " << current_box;
-	stream << "\n\n<Boxes>\n\n"; 
+    box_manager.write_form(stream);
 
-	for (auto& box : boxes)
-	{
-		box.write_form(stream);
-		stream << '\n';
-	}
-	stream << "<Dealer>\n";
-	dealer.write_form(stream);
-	stream << '\n';
-
-	stream << "\n\n<Players>\n\n"; 
-	for (auto& player : players)
-	{
-		player.write_form(stream);
-		stream << '\n';
-	}
+    player.write_form(stream);
+    stream << '\n';
 }
 
 // Go to next active box, if active add card
+// Need to check for instant payout or bust
 int Game::Hit()
 {
-	if (current_box < boxes.size())
-	{
-		Box& box = boxes[current_box];
-		box.addCard(deck.Top());
-		used.push_back(deck.Top());
-		deck.Pop();
+    if ( box_manager.nextActive() != -1)
+    {
+        int _active = box_manager.addCard(deck.Top());
+        deck.Pop();
 
-		if (box.getStatus() == Box::Status::BUST 		|| 
-			box.getStatus() == Box::Status::BLACKJACK 	||
-			box.getStatus() == Box::Status::TWENTY_ONE 	||
-			box.getStatus() == Box::Status::FULL)
-		{
-			++current_box;	
-			nextActiveBox();
-		}
+        if (box_manager.Get(_active).getStatus() == Box::Status::FULL)
+            Pay(_active, 2.f);
 
-		return 0;
-	}
-	else
-		return -1;
+        return _active;
+    }
+    else
+        return -1;
+
+}
+
+void Game::Pay(int box_index, float factor)
+{
+    Box& box = box_manager.Get(box_index);
+    for (int i = 0; i < box.bets.size(); ++i)
+    {
+        float amount = box.bets[i];
+        if (amount > 0.0f)
+            player.Pay(amount * factor);
+    }
+    box.setActive(false);
+    
 }
 
 int Game::GamePhase()
 {
-	current_box = 0;
+    if (box_manager.anyActive())
+    {
+        box_manager.setActive(0);
+        box_manager.nextActive();
+        return 0;
+    }
+    else
+    {
+        Reset();
+        return -1;
+    }
 }
 
-void Game::Sit()
+int Game::Sit()
 {
-	++current_box;
-	nextActiveBox();
+    box_manager.Next(); 
+    return box_manager.nextActive();
 }
 
 // Deal cards to atleast 17
@@ -151,58 +133,106 @@ void Game::Sit()
 // Pay appropriate players
 Card Game::FinalDeal()
 {
-	if (dealer.getCount().first < 17)
-	{
-		dealer.addCard(deck.Top());
-		used.push_back(deck.Top());
-		deck.Pop();
-		return dealer.Top();
-	}
-	else
-	{
-		Payout();
-		return Card();
-	}
+    Box& dealer = box_manager.Get(DEALER_BOX);
+    if (box_manager.anyActive())
+    {
+        if (dealer.Highest() < 17)
+        {
+            dealer.addCard(deck.Top());
+            deck.Pop();
+            return dealer.Top();
+        }
+        else
+        {
+            Payout();
+            Reset();
+            return Card();
+        }
+    }
+    else
+    {
+        Reset();
+        return Card();
+    }
 }
 
 void Game::Payout()
 {
-	if (dealer.Bust())
-	{
-		// Pay everyone
-	}
-	else 
-	{
-		// Pay appropriately
-	}	
+    box_manager.setActive(0);
+    Box& dealer = box_manager.Get(DEALER_BOX);
+    // If dealer busts pay all
+    if (dealer.Bust())
+    {
+        while (box_manager.nextActive() != -1)
+        {
+            Pay(box_manager.getActiveIndex(), 2.f);
+            box_manager.Next();
+        }
+    }
+    else if (!box_manager.Get(DEALER_BOX).getStatus() == Box::Status::BLACKJACK)
+    {
+        // Pay appropriately
+        while (box_manager.nextActive() != -1)
+        {
+            Box& box = box_manager.getActive();
+            // Win
+            if (box.Highest() > dealer.Highest())
+                Pay(box_manager.getActiveIndex(), 2.f);
+
+            // Standoff
+            if (box.Highest() == dealer.Highest())
+                Pay(box_manager.getActiveIndex(), 1.f);
+
+            box_manager.Next();
+        }
+    }	
 }
 
-void Game::CleanUp()
+// Empty all boxes and shuffle deck
+void Game::Reset()
 {
-	for (auto& it : boxes)
-		it = Box();
+    active = false;
+	initial_state = InitialState::FIRST_ROUND;
+    deck.Reset(rand_gen);
+    box_manager.Reset();
 }
 
 void Game::Next()
 {
-	switch (state)
-	{
-		case State::PLACE_BETS:
-			state = State::INITIAL_DEAL;
-			break;
-		case State::INITIAL_DEAL:
-			break;
-	}
+    switch (state)
+    {
+        case State::PLACE_BETS:
+            state = State::INITIAL_DEAL;
+            break;
+        case State::INITIAL_DEAL:
+            break;
+    }
 }
 
-Player& Game::currentPlayer()
+Player& Game::getPlayer()
 {
-	return players[current_player];
+    return player;
 }
 
 void Game::Load(const std::string& path)
 {
-	std::ifstream stream(path, std::ios_base::in);
-	players[0].read_form(stream);
+    std::ifstream stream(path, std::ios_base::in);
+    player.read_form(stream);
+}
+
+int Game::addBet(float value, int box)
+{
+    int pos = box - 1; // Offset created by box numbers
+    if (player.getBalance() >= value && value > 0.0f)
+    {
+        box_manager.addBet(value, pos);
+        player.setBalance(player.getBalance() - value);
+        return 0;
+    }
+    else
+    {
+        return -1;
+    }
+
 }
 

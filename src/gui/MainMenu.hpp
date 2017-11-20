@@ -10,13 +10,13 @@ using namespace ucurses;
 
 namespace blackjack {
 
-	class MainMenu : public Interface
+	class MainMenu : public ucurses::State
 	{
         enum Selection { SP = 0, MP, SETTINGS};
 
 		public:
 
-			MainMenu(Game& game);
+			MainMenu(Game* game);
 
 		protected:
 
@@ -24,8 +24,7 @@ namespace blackjack {
 			virtual void Initialize();
 
 			Menu* mode_select;
-            SingleplayerScreen sp;
-			Config config_ui;
+            Game* game_data;
 	};
 
 }

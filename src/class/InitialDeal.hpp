@@ -1,14 +1,25 @@
+/*
+ * Outsourced gui state code to reduce clutter in GameUI class
+ */
+
 #pragma once
 #include <class/State.hpp>
 
+namespace ucurses { class Window; }
 
-class InitialDeal : public State
-{
-	public:
+class Game;
 
-		enum class _State { FIRST_ROUND = 0, SECOND_ROUND };
+namespace blackjack {
+    
+    class GameUI;
 
-		void 	Setup();
-		void 	Advance();
-	
-};
+    class InitialDeal : public blackjack::State
+    {
+        public:
+
+            static void Setup(GameUI* game_ui);
+            static void Advance(GameUI* game_ui);
+            
+            static void Callback(Game* game_data, ucurses::Window* target);
+    };
+}

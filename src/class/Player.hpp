@@ -10,6 +10,7 @@ class Player
         Player();
 
 		void setBalance(float f);
+        void Pay(float value);
 		void setName(const std::string& inString);
 
 		float getBalance() const;
@@ -17,6 +18,9 @@ class Player
 
 		void write_form(std::ostream& stream);
 		void read_form(std::istream& stream);
+
+        void write_binary(std::ostream& stream);
+        void read_binary(std::istream& stream);
 
 	protected:
     

@@ -13,7 +13,6 @@ class Box
 {
     public:
 
-		enum BetErrorCode 	{ SUCCESS = 0, INSUFFICIENT_FUNDS, MAX_CAPACITY, INVALID };
 		enum Status 		{ BLACKJACK, TWENTY_ONE, BUST, UNDER, FULL };
         Box();
 
@@ -23,6 +22,8 @@ class Box
 		Status getStatus();
 		// Determine status of box
 		void setStatus();
+        bool Active();
+        void setActive(bool b);
 
         std::pair<short, short> getCount();
 		// Two possible values
@@ -30,6 +31,8 @@ class Box
 		// getCount().first being the safest and
 		// getCount().second being the highest
 		// getCount().second == -1 if over 22 or no aces exist
+        // Returns highest score under 21
+        short Highest();
 
 		void addCard(Card& card);
 		Card Bottom();				// Returns the first non-null card
@@ -44,6 +47,7 @@ class Box
 		int nCards();
         
 		bool addBet(float f);		// Returns false if box is full
+        void Pay(float factor);
 
 		// Assume the player at index 0 is owner of bets[0]
 		// This removes the need to map players to the bets they place
@@ -58,5 +62,9 @@ class Box
 
         std::array<Card, 5> cards;
 		Status status;
+
+        bool active;
+        // Set to true on InitialDeal phase if sum is greater than zero
+        // Set to inactive if already payed out due to blackjack
 };
 

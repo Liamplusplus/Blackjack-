@@ -36,29 +36,23 @@ class Game
 
 		// Empties all boxes and resets statuses
 		// Called on quit and at the end of each hand
-		void CleanUp();
-
-        void Run();
-        /*
-         * Each player places bets
-         * Deals first card to players and dealer. Deals second card to all players.
-         * Playing phase for all players
-         * Dealing phase
-         */
+        void Reset();
 
 		int Hit();
-		void Sit();
+		int Sit();
+        int addBet(float value, int box);
 
 		/* Components */
 
         Deck deck;
-		std::vector<Card> used;
 
 		BoxManager box_manager;
+        // Pays all players for a given box
+        void Pay(int box_index, float factor);
 
 		/* Players */
 
-		Player& currentPlayer();
+		Player& getPlayer();
 
 		void Load(const std::string& path);
 
@@ -66,11 +60,8 @@ class Game
 
 	protected:
 
-		std::array<Player, 4> players;
-
 		State state;
-
-		int current_player;
+        Player player;
 
 		ctk::RandomGenerator rand_gen;
 

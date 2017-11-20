@@ -7,22 +7,23 @@
  * step at a time make it easier for saving and maintaining
  * code
  */
+namespace blackjack {
+    class State 
+    {
 
-class State 
-{
+        public:
 
-	public:
+            enum class _State;
 
-		enum class _State;
+            void 	Setup()		{}
+            void 	Advance() 	{}
 
-		void 	Setup()		{}
-		void 	Advance() 	{}
+            _State 	getState()	{ return state; }
 
-		_State 	getState()	{ return state; }
+        protected:
 
-	protected:
-
-		_State state;
+            _State state;
 
 
-};
+    };
+}

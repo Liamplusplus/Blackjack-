@@ -1,16 +1,20 @@
 #pragma once
 #include <array>
 
-#include <class/Game.hpp>
-
+//GUI
 #include <ucurses/ucurses.hpp>
+#include <class/InitialDeal.hpp>
+
 using namespace ucurses;
+
+class Game;
 
 namespace blackjack {
 
-    class GameUI : public Interface
+    class GameUI : public ucurses::State
     {
 
+        friend class InitialDeal;
         public:
 
             GameUI(Game* game);
@@ -22,6 +26,8 @@ namespace blackjack {
 			void setup();
 			void GamePhase();
 			void InitialDeal();
+            void displayResults();
+            void displayPlayerInfo(Label* display);
 
         protected:
 
@@ -29,7 +35,7 @@ namespace blackjack {
 
 			// Widgets
             std::array<Label*, 6> boxes;
-            std::array<Label*, 6> counts;
+            std::array<Label*, 7> counts;
             TextEntry* bet;
 			Label* player_info;
 
@@ -41,6 +47,8 @@ namespace blackjack {
 			void RefreshGraphics();
             void RefreshBoxes();
             void refreshBoxCount(int index);
+
+            void Payout();
 
 			// Everytime box changes update UI to display active box
 			void RefreshActiveBox();

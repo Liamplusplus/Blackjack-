@@ -8,8 +8,7 @@ int main()
 
 
     Game game;
-    blackjack::MainMenu main_menu(game);
-	main_menu.Bind(mainwindow);
+	mainwindow->Bind(new blackjack::MainMenu(&game));
 
 	gui.Run(); 
 }

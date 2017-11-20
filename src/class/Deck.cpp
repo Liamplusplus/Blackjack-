@@ -25,6 +25,17 @@ void Deck::Shuffle(ctk::RandomGenerator& rand_gen)
     std::shuffle ( deck.begin(), deck.end(), rand_gen.Generate() );
 }
 
+void Deck::Reset(ctk::RandomGenerator& rand_gen)
+{
+    deck.clear();
+    for (int value = 1; value <= 13; ++value)
+        for (int suit = 0; suit < Card::Suit::NUMSUIT; ++suit)
+            deck.emplace_back(value, static_cast<Card::Suit>(suit));
+
+    Shuffle(rand_gen);
+}
+
+
 void Deck::write_form(std::ostream& stream)
 {
     stream << deck.size() << std::endl;

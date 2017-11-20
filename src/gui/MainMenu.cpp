@@ -4,14 +4,13 @@
 namespace blackjack {
 
 
-	MainMenu::MainMenu(Game& game) : sp(game)
+	MainMenu::MainMenu(::Game* game) : game_data(game)
 	{
 	
 	}
 
 	void MainMenu::Initialize()
 	{
-		target->Clear();
 		mode_select = new Menu(target);
 		mode_select->setPosition(0.5f, 0.5f);
 
@@ -27,15 +26,16 @@ namespace blackjack {
 
 	void MainMenu::Select()
 	{
-		target->pushCallback(KEY_F(3), std::bind(&MainMenu::Initialize, this));
+        auto lambda = [](Window* target, ::Game* game) { target->Bind(new MainMenu(game)); };
+		target->pushCallback(KEY_F(3), std::bind(lambda, target, game_data));
 
 		switch (mode_select->getSelectedIndex())
 		{
 			case Selection::SP:
-				sp.Bind(target);
+				target->Bind(new SingleplayerScreen(game_data));
 				break;
 			case Selection::SETTINGS:
-				config_ui.Bind(target);
+				target->Bind(new Config());
 				break;
 		}
 	}
