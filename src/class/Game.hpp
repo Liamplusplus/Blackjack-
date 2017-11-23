@@ -33,6 +33,7 @@ class Game
 		void Quit();
 		void Save();
 		void Next();
+        void New(const std::string& name);
 
 		// Empties all boxes and resets statuses
 		// Called on quit and at the end of each hand

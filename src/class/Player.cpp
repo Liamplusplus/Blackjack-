@@ -1,7 +1,7 @@
 #include <class/Player.hpp>
 #include <class/Config.hpp>
 
-Player::Player() : balance(100.0f), name("Null")
+Player::Player() : balance(100.0f), name("Null"), debt(0.f)
 {
     
 }
@@ -24,6 +24,42 @@ void Player::setName(const std::string& inString)
 float Player::getBalance() const
 {
 	return balance;
+}
+
+void Player::UpdateStatus()
+{
+    float net = netWorth();
+    if (net > 40000.f)
+        status = WealthStatus::WEALTHY;
+    else if (net > 20000.f)
+        status = WealthStatus::COMFORTABLE;
+    else if (net > 10000.f)
+        status = WealthStatus::AVERAGE;
+    else if (net < 1000.f)
+        status = WealthStatus::POOR;
+    else if (net < 500.f)
+        status = WealthStatus::NO_DISPOSABLE;
+    else if (net < 100.f)
+        status = WealthStatus::BROKE;
+    else if (net < debt)
+        status = WealthStatus::DEBT;
+}
+
+void Player::Withdraw(float amount)
+{
+    balance += amount;
+    savings -= amount;
+}
+
+void Player::Deposit(float amount)
+{
+    balance -= amount;
+    savings += amount;
+}
+
+float Player::netWorth()
+{
+    return balance + savings;
 }
 		
 const std::string& Player::getName() const

@@ -34,6 +34,7 @@ namespace blackjack {
 
     void InitialDeal::Callback(Game* game_data, Window* target)
     {
+        game_data->Save();
         target->Bind(new MainMenu(game_data));
     }
 

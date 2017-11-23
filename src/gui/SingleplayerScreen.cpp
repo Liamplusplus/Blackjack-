@@ -33,10 +33,16 @@ namespace blackjack {
     void SingleplayerScreen::New()
     {
         target->Clear();
+        target->ucurses->Render();
         TextEntry* name_enter = new TextEntry(target);
         name_enter->setPosition(0.5f, 0.5f);
         name_enter->setSubject("Name");
-        name_enter->getInput();
+        while (name_enter->getText() == "")
+            name_enter->getInput();
+
+        game_data->New(name_enter->getText());
+        target->Bind(new GameUI(game_data));
+        
     
     }
     void SingleplayerScreen::Load()
@@ -49,8 +55,10 @@ namespace blackjack {
 		else
 		{
 			path potential_save(game::save + menu->getSelectedItem());
+
 			if (exists(potential_save))
 				game_data->Load(potential_save.string());
+
 			target->Bind(new GameUI(game_data));
 		}
     

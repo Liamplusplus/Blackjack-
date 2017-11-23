@@ -13,8 +13,13 @@ Game::Game() : active(false)
 
 void Game::Save()
 {
-    std::fstream file(game::save + player.getName(), std::ios_base::binary);
+    std::fstream file(game::save + player.getName(), std::ios_base::out | std::ios_base::binary);
     player.write_binary(file);
+}
+
+void Game::New(const std::string& name)
+{
+    player.setName(name);
 }
 
 // Interuptable initial deal phase
@@ -217,7 +222,7 @@ Player& Game::getPlayer()
 void Game::Load(const std::string& path)
 {
     std::ifstream stream(path, std::ios_base::in);
-    player.read_form(stream);
+    player.read_binary(stream);
 }
 
 int Game::addBet(float value, int box)

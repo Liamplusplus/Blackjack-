@@ -132,9 +132,22 @@ namespace blackjack {
         }
         else
         {
-            target->Clear();
-            Initialize();
-            //InitialDeal::Setup(this);
+            if (game->getPlayer().getBalance() < 5.f)
+            {
+                game::debug << "TEST" << std::endl;
+                target->Clear();
+                Label* game_over = new Label(target);
+                game_over->setPosition(0.5f, 0.5f);
+                game_over->setText("You are broke, go be depressed somewhere else");
+                game_over->move(-10, 0);
+                target->addTip("Enter: Accept Defeat");
+                target->addCommand(10, std::bind(&InitialDeal::Callback, game, target));
+            }
+            else
+            {
+                target->Clear();
+                Initialize();
+            }
         }
     }
 
