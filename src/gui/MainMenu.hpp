@@ -22,6 +22,7 @@ namespace blackjack {
 
 			void Select();
 			virtual void Initialize();
+			void Start();
 
 			Menu* mode_select;
             Game* game_data;

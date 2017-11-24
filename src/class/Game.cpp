@@ -4,6 +4,7 @@
 #include <fstream>
 #include <algorithm>
 
+
 Game::Game() : active(false)
 {
 	initial_state = InitialState::FIRST_ROUND;
@@ -11,10 +12,24 @@ Game::Game() : active(false)
     deck.Shuffle(rand_gen);
 }
 
+/*
+ * Allow only one save per game
+ * Character must die to delete save and start again
+ * Deleting file will allow the creation of another save
+ * however normal players will not understand this
+ */
 void Game::Save()
 {
-    std::fstream file(game::save + player.getName(), std::ios_base::out | std::ios_base::binary);
+    std::fstream file(game::save, std::ios_base::out | std::ios_base::binary);
     player.write_binary(file);
+}
+
+// Use boost implementation if available
+// Else use std::fstream although it has caveats
+bool Game::save_exists()
+{
+	std::ifstream test(game::save);
+	return test.good();
 }
 
 void Game::New(const std::string& name)
@@ -219,9 +234,9 @@ Player& Game::getPlayer()
     return player;
 }
 
-void Game::Load(const std::string& path)
+void Game::Load()
 {
-    std::ifstream stream(path, std::ios_base::in);
+    std::ifstream stream(game::save, std::ios_base::in);
     player.read_binary(stream);
 }
 

@@ -1,5 +1,7 @@
 #include <gui/MainMenu.hpp>
 #include <ucurses/gui/Config.hpp>
+#include <gui/PlayerCreate.hpp>
+#include <gui/GameUI.hpp>
 
 namespace blackjack {
 
@@ -16,8 +18,7 @@ namespace blackjack {
 
 		mode_select->addItem("Singleplayer");
 		mode_select->addItem("Multiplayer");
-		mode_select->addItem("Settings");
-
+		mode_select->addItem("Settings"); 
 		target->addCommand(10, std::bind(&MainMenu::Select, this));
 
 		//win->pushCallback(KEY_F(3), std::bind(&MainMenu::Bind, this, target));
@@ -32,11 +33,21 @@ namespace blackjack {
 		switch (mode_select->getSelectedIndex())
 		{
 			case Selection::SP:
-				target->Bind(new SingleplayerScreen(game_data));
+				Start();
 				break;
 			case Selection::SETTINGS:
 				target->Bind(new Config());
 				break;
 		}
+	}
+
+	void MainMenu::Start()
+	{
+		if (game_data->save_exists())
+			game_data->Load();
+		else
+			CreatePlayer(target, game_data);
+        
+		target->Bind(new GameUI(game_data));
 	}
 }

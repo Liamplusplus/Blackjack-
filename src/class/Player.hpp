@@ -41,18 +41,26 @@ class Player
 
         Player();
 
-		void setBalance(float f);
-        void Pay(float value);
-		void setName(const std::string& inString);
+		// High level
+        // 
+		void Pay(float value);
+        void Withdraw(float amount);
+        void Deposit(float amount);
 
-		float getBalance() const;
+		// Getters / Setters
+		//
+		void setBalance(float f);
+		void setName(const std::string& inString);
+		
+		float getBalance() 	const;
+		float getSavings() 	const;
+		float getDebt() 	const;
+
 
         // Seperating net-worth into savings and balance will give the player the ability
         // to save or lose all their money
         float netWorth() const;
 
-        void Withdraw(float amount);
-        void Deposit(float amount);
 
 		const std::string& getName() const;
 

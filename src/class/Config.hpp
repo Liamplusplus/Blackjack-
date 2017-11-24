@@ -7,7 +7,7 @@ namespace game {
 
     const static std::string log = "./log/game.log";
     const static std::string graphics = "./.resources/cards";
-	const static std::string save = "./.resources/save/";
+	const static std::string save = "./.resources/save.bin";
 
 	extern std::ofstream debug;
     

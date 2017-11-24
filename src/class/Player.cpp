@@ -1,9 +1,9 @@
 #include <class/Player.hpp>
 #include <class/Config.hpp>
 
-Player::Player() : balance(100.0f), name("Null"), debt(0.f)
+Player::Player() : balance(100.0f), savings(900.f), name("Null"), debt(0.f)
 {
-    
+	status = WealthStatus::POOR;
 }
 		
 void Player::setBalance(float f)
@@ -57,7 +57,7 @@ void Player::Deposit(float amount)
     savings += amount;
 }
 
-float Player::netWorth()
+float Player::netWorth() const
 {
     return balance + savings;
 }
@@ -70,6 +70,7 @@ const std::string& Player::getName() const
 void Player::write_form(std::ostream& stream)
 {
 	stream << "<Name> " << name << '\n' << "<Balance> " << balance;
+	stream << "<Savings> " << savings << '\n' << "<Debt> " << debt;
 }
 		
 void Player::read_form(std::istream& stream)
@@ -78,12 +79,19 @@ void Player::read_form(std::istream& stream)
 	stream >> name;
     stream.ignore(256, ' ');
 	stream >> balance;
+    stream.ignore(256, ' ');
+	stream >> savings;
+    stream.ignore(256, ' ');
+	stream >> debt;
+	UpdateStatus();
 }
         
 void Player::write_binary(std::ostream& stream)
 {
     game::write_binary(stream, name);
-	stream.write((char*)&balance, sizeof(float)); //Save size to file
+	stream.write((char*)&balance, sizeof(float)); 
+	stream.write((char*)&savings, sizeof(float)); 
+	stream.write((char*)&debt, sizeof(float)); 
 
 }
         
@@ -91,4 +99,7 @@ void Player::read_binary(std::istream& stream)
 {
     game::read_binary(stream, name);
 	stream.read((char*)&balance, sizeof(float)); //Save size to file
+	stream.read((char*)&savings, sizeof(float)); 
+	stream.read((char*)&debt, sizeof(float)); 
+	UpdateStatus();
 }

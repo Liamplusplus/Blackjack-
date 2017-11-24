@@ -32,6 +32,7 @@ class Game
 
 		void Quit();
 		void Save();
+		bool save_exists();
 		void Next();
         void New(const std::string& name);
 
@@ -55,7 +56,7 @@ class Game
 
 		Player& getPlayer();
 
-		void Load(const std::string& path);
+		void Load();
 
 		void logState();
 

@@ -21,6 +21,8 @@ namespace blackjack {
         menu->addItem("New Player");
         menu->addItem("----------");
 
+		if (game_data->save_exists())
+
        	for (auto&& p : directory_iterator(path(game::save)))
 			if (is_regular_file(p))
 				menu->addItem(p.path().filename().string());
@@ -43,24 +45,6 @@ namespace blackjack {
         game_data->New(name_enter->getText());
         target->Bind(new GameUI(game_data));
         
-    
-    }
-    void SingleplayerScreen::Load()
-    {
-        if (menu->getSelectedIndex() == 1)
-            return;
-		// Check if last item is selected
-		if (menu->getSelectedIndex() == 0)
-			New();
-		else
-		{
-			path potential_save(game::save + menu->getSelectedItem());
-
-			if (exists(potential_save))
-				game_data->Load(potential_save.string());
-
-			target->Bind(new GameUI(game_data));
-		}
     
     }
 
