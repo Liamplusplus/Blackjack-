@@ -26,8 +26,8 @@ namespace blackjack {
 			void setup();
 			void GamePhase();
 			void InitialDeal();
-            void displayResults();
-            void displayPlayerInfo(Label* display);
+            void displayPlayerInfo();
+			void acceptDefeat();
 
         protected:
 

@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <class/Player.hpp>
+
 #include <ucurses/ucurses.hpp>
 using namespace ucurses;
 

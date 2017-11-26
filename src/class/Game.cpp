@@ -4,6 +4,8 @@
 #include <fstream>
 #include <algorithm>
 
+#include <cstdio>
+
 
 Game::Game() : active(false)
 {
@@ -37,6 +39,12 @@ void Game::New(const std::string& name)
     player.setName(name);
 }
 
+void Game::Delete()
+{
+	std::remove(game::save.data());	
+	player = Player();
+}
+
 // Interuptable initial deal phase
 // Add card to next active box
 // if no active boxes prompt player
@@ -56,8 +64,10 @@ int Game::InitialDeal()
         deck.Pop();
 
         if (box.getStatus() == Box::Status::BLACKJACK)
+		{
             Pay(active_box, 2.5f);
-
+			logState();
+		}
         return active_box;
     }
     else if (!active)
@@ -102,9 +112,10 @@ int Game::Hit()
     if ( box_manager.nextActive() != -1)
     {
         int _active = box_manager.addCard(deck.Top());
+		Box& box = box_manager.Get(_active);
         deck.Pop();
 
-        if (box_manager.Get(_active).getStatus() == Box::Status::FULL)
+        if (box.Full() && !box.Busted())
             Pay(_active, 2.f);
 
         return _active;
@@ -117,14 +128,9 @@ int Game::Hit()
 void Game::Pay(int box_index, float factor)
 {
     Box& box = box_manager.Get(box_index);
-    for (int i = 0; i < box.bets.size(); ++i)
-    {
-        float amount = box.bets[i];
-        if (amount > 0.0f)
+	float amount = box.bet;
+    if (amount > 0.0f)
             player.Pay(amount * factor);
-    }
-    box.setActive(false);
-    
 }
 
 int Game::GamePhase()
@@ -181,7 +187,7 @@ void Game::Payout()
     box_manager.setActive(0);
     Box& dealer = box_manager.Get(DEALER_BOX);
     // If dealer busts pay all
-    if (dealer.Bust())
+    if (dealer.Busted())
     {
         while (box_manager.nextActive() != -1)
         {
@@ -247,6 +253,7 @@ int Game::addBet(float value, int box)
     {
         box_manager.addBet(value, pos);
         player.setBalance(player.getBalance() - value);
+		Save();
         return 0;
     }
     else

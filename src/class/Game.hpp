@@ -32,6 +32,7 @@ class Game
 
 		void Quit();
 		void Save();
+		void Delete();
 		bool save_exists();
 		void Next();
         void New(const std::string& name);

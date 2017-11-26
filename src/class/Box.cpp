@@ -2,21 +2,12 @@
 #include <fstream>
 #include <algorithm>
 
-Box::Box() : status(Box::Status::UNDER), active(false)
+Box::Box() : status(Box::Status::UNDER), active(false), busted(false), full(false)
 {
-    for (auto& bet : bets)
-        bet = 0.0f;
+	bet = 0.0f;
 
-    for (auto& card : cards)
-        card = Card();
-}
-
-float Box::getSum()
-{
-    float temp = 0.0f;
-    for (auto& bet : bets)
-        temp += bet;
-    return temp;
+	for (auto& card : cards)
+		card = Card();
 }
 
 // Two possible values
@@ -61,11 +52,11 @@ std::pair<short, short> Box::getCount()
 
 short Box::Highest()
 {
-    std::pair<short, short> count = getCount();
-    if (count.second == -1)
-        return count.first;
-    else
-        return count.second;
+	std::pair<short, short> count = getCount();
+	if (count.second == -1)
+		return count.first;
+	else
+		return count.second;
 }
 
 // No cards
@@ -77,19 +68,18 @@ bool Box::Empty()
 // No bets
 bool Box::inActive()
 {
-	return getSum() == 0; 
+	return bet == 0.f; 
 }
 
 // Busted
-bool Box::Bust()
+bool Box::Busted()
 {
-	return getCount().first > 21;
+	return busted;
 }
 
-bool Box::Blackjack()
+bool Box::Full()
 {
-	std::pair<short, short> count = getCount();
-	return (getCount().first == 21 || getCount().second == 21);
+	return full;
 }
 
 Card Box::Bottom()
@@ -115,15 +105,14 @@ int Box::nCards()
 
 bool Box::addBet(float value)
 {
-    active = true;
-	for (auto& bet : bets)
+	active = true;
+
+	if (bet == 0.0f)
 	{
-		if (bet == 0.0f)
-		{
-			bet = value;
-			return true;
-		}
+		bet = value;
+		return true;
 	}
+
 	return false;
 }
 
@@ -143,42 +132,37 @@ void Box::setStatus()
 	std::pair<short, short> count = getCount();
 
 	if (count.first > 21)
-    {
-		status = Status::BUST;
-        active = false;
-    }
+	{
+		busted = true;
+		active = false;
+	}
 	else if (count.second == 21 || count.first == 21)
-    {
-        if (nCards() == 2)
-        {
+	{
+		if (nCards() == 2)
+		{
 			status = Status::BLACKJACK;
-            active = false;
-        }
-        else
+			active = false;
+		}
+		else
 			status = Status::TWENTY_ONE;
-    }
-	else if (nCards() == 5)
-    {
-		status = Status::FULL;
-        active = false;
-    }
+	}
 	else
 		status = Status::UNDER;	
-}
 
-void Box::Pay(float factor)
-{
-    
+	if (nCards() == 5)
+	{
+		full = true;
+	}
 }
 
 bool Box::Active()
 {
-    return active;
+	return active;
 }
 
 void Box::setActive(bool b)
 {
-    active = b;
+	active = b;
 }
 
 Box::Status Box::getStatus()
@@ -190,12 +174,10 @@ void Box::write_form(std::ostream& stream)
 {
 	bool active = !inActive();
 	stream << "<Active> " << std::boolalpha << active;
-	stream << "<Busted> " << std::boolalpha << Bust();
+	stream << "<Busted> " << std::boolalpha << Busted();
 	if (active)
 	{
-		stream << "\n<Bets> ";
-		for (auto& bet : bets)
-			stream << bet << " ";
+		stream << "\n<Bet> " << bet << '\n' ;
 		stream << "\n<Cards> " << nCards() << std::endl;
 		for (auto& card : cards)
 		{

@@ -13,7 +13,8 @@ class Box
 {
     public:
 
-		enum Status 		{ BLACKJACK, TWENTY_ONE, BUST, UNDER, FULL };
+		// Seperated non mutually-exclusive enums into booleans FULL and BUST
+		enum Status 		{ BLACKJACK, TWENTY_ONE, UNDER};
         Box();
 
         // Returns sum of all bets
@@ -32,6 +33,7 @@ class Box
 		// getCount().second being the highest
 		// getCount().second == -1 if over 22 or no aces exist
         // Returns highest score under 21
+		//
         short Highest();
 
 		void addCard(Card& card);
@@ -39,21 +41,16 @@ class Box
 		Card Top();
 	
 		// Hands
-		bool Bust();				/* Too many */
-		bool Blackjack();
+		bool Busted();				/* Too many */
+		bool Full();
 
 		bool Empty();				/* No cards */
 		bool inActive();			/* No bets */
 		int nCards();
         
 		bool addBet(float f);		// Returns false if box is full
-        void Pay(float factor);
 
-		// Assume the player at index 0 is owner of bets[0]
-		// This removes the need to map players to the bets they place
-		// But it also ties the number of players to the number of bets a box can hold
-		//
-        std::array<float, 4> bets;
+		float bet;
 
 		void write_form(std::ostream& stream);
 
@@ -64,6 +61,8 @@ class Box
 		Status status;
 
         bool active;
+		bool busted;
+		bool full;
         // Set to true on InitialDeal phase if sum is greater than zero
         // Set to inactive if already payed out due to blackjack
 };

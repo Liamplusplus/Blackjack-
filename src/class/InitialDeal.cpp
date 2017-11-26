@@ -16,7 +16,7 @@ namespace blackjack {
         
         game_ui->counts.back()->setText("Dealer");
         game_ui->RefreshBoxes();
-        game_ui->displayPlayerInfo(game_ui->player_info);
+        game_ui->displayPlayerInfo();
 		
         game_ui->target->addCommand(10, std::bind(&GameUI::InitialDeal, game_ui));
 		//game_ui->target->addCommand('l', std::bind(&Game::logState, game_ui->game));

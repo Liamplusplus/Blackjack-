@@ -1,4 +1,5 @@
 #include <gui/StatusScreen.hpp>
+#include <ctk/io/conversion.hpp>
 
 namespace blackjack {
 
@@ -22,7 +23,7 @@ namespace blackjack {
 		display->setPosition(0.1f, 0.1f);
 
 		display->setText(player->getName());
-		display->appendLine(player->getBalance());
+		display->appendLine("$" + ctk::to_string(player->getBalance()));
 	
 	}
 }
