@@ -232,12 +232,9 @@ namespace blackjack {
 		{
 			boxes[i]->setText("  Box " + std::to_string(i + 1) + "  "); // 0, 1, 8, 9
 			boxes[i]->appendLine("");
-			if (game->box_manager.Get(i).bet > 0.0f)
-			{
-				std::stringstream stream;
-				stream << game->getPlayer().getName() << ": $" << std::fixed << std::setprecision(2) << bet;
-				boxes[i]->appendLine(stream.str());
-			}
+			float bet =game-> box_manager.Get(i).bet;
+			if (bet > 0.0f)
+				boxes[i]->appendLine(game->getPlayer().getName() + ": $" + ctk::to_string(bet));
 		}
 		RefreshActiveBox();
 	}

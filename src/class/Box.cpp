@@ -152,6 +152,7 @@ void Box::setStatus()
 	if (nCards() == 5)
 	{
 		full = true;
+		active = false;
 	}
 }
 
