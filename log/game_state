@@ -5,14 +5,14 @@
 <Boxes>
 
 <Active> true<Busted> false
-<Bet> 10
+<Bet> 50
 
 <Cards> 2
-<Value> 10
-<Suit> Diamonds
-
 <Value> 1
-<Suit> Clubs
+<Suit> Spades
+
+<Value> 12
+<Suit> Hearts
 
 <Value> 0
 <Suit> Hearts
@@ -32,6 +32,6 @@
 <Active> false<Busted> false
 <Dealer>
 <Active> false<Busted> false
-<Name> Liam
-<Balance> 519<Savings> 900
+<Name> liam
+<Balance> 125<Savings> 900
 <Debt> 0
