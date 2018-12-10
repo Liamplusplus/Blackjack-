@@ -5,3 +5,5 @@ is not available on Windows. You can play the game under release/linux64 if you 
 
 Check out the UCurses repo at https://github.com/Roguelight/ucurses.git if you are interested how some of the
 GUI widgets and window management happens!
+
+Run ./Blackjack++ in your CLI to play the game!

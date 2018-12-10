@@ -22,10 +22,10 @@ comma :=,
 MAIN := Blackjack++
 
 LIBRARIES := ctk ucurses boost
-LIBFILES := $(DYNAMIC) -lucurses -lctk -lboost_system -lboost_filesystem -Wl,--as-needed
+LIBFILES := $(DYNAMIC) -lsfml-audio -lsfml-system -lucurses -lctk -lboost_system -lboost_filesystem -lncurses -Wl,--as-needed
 
 CXX := g++
-CXXFLAGS := -g -std=c++17 -O2 -flto
+CXXFLAGS := -g -std=c++17
 
 #*****************  Pre-processor  ****************************************
 
@@ -37,14 +37,14 @@ ifeq ($(OS),Linux)
 	CXX := g++
 	LIBEXT := .so
 	OBJEXT := .o
-	LIBDIR := $(foreach l,$(LIBRARIES),-L$(WORKFLOW_LIB)/C++/$(l)/$(CXX))
-	TARGET := gcc
+	LIBDIR := $(foreach l,$(LIBRARIES),-L$(WORKFLOW_LIB)/$(l)/$(CXX))
+	TARGET := Linux
 	ifeq ($(strip $(target)),)
 		CXXFLAGS += -fPIC
 	endif
 	LIBEXT := .so
 	OBJEXT := .o
-	LIBDIR := $(foreach l,$(LIBRARIES),-L$(WORKFLOW_LIB)/C++/$(l)/$(TARGET))
+	LIBDIR := $(foreach l,$(LIBRARIES),-L$(WORKFLOW_LIB)/$(l))
 	RPATH :=$(subst -L,-Wl$(comma)-rpath=,$(LIBDIR))
 endif
 
@@ -83,11 +83,11 @@ endif
 #*****************  Build  ************************************************
 
 LIBPATH :=lib/$(TARGET)
-BUILDPATH :=bin/$(TARGET)
+BUILDPATH := src/$branch/ 
 
 #*****************  Branching  ********************************************
 
-BRANCHES := $(wildcard src/*)
+BRANCHES := src/app src/player/ src/card src/house src/poker src/holdem#$(wildcard src/*)
 ifeq ($(strip $(branch)),)
 	SRC := $(foreach b, $(BRANCHES), $(wildcard $(b)/*.cpp))
 	LIB := lib$(MAIN)
@@ -139,7 +139,7 @@ LIBRARY := $(LIB)$(LIBEXT)$(ver)
 ARCHIVE := $(LIB).a
 APP := $(TARGETAPP)$(ver)$(APPEXT) # Isolate the executable and library filenames on their own
 
-TARGETAPP := $(BUILDPATH)/$(APP)
+TARGETAPP := $(APP)
 TARGETARCHIVE := $(LIBPATH)/$(ARCHIVE)
 TARGETLIB := $(LIBPATH)/$(LIBRARY)
 
