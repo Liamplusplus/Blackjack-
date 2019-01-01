@@ -41,6 +41,7 @@ namespace house {
             void calculatePayout();
 
             virtual void Update();
+            void Fold();
 
             void changeBet(float amount);
             void placeBet();
